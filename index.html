@@ -1,12 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BiografÍa Git</title>
+    <style>
+        .error {
+            color: red;
+            margin-top: 5px;
+        }
+        .exitoo {
+            color: green;
+            margin-top: 5px;
+        }
+        .validacion-container {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
 </head>
-
 <body>
     <h3>Daniel Fernández Guerrero Adrián</h3>
     <h2>Formación:</h2>
@@ -24,7 +38,7 @@
             <td>22</td>
             <td>ferticx1@gmail.com</td>
         </tr>
-       
+
     </table>
     <h1>Mis Hobbies</h1>
     <ul>
@@ -43,8 +57,76 @@
         <li>Viajar, Explorar</li>
     </ul>
     <h1>Imagen Relevante: Galapagos</h1>
-    <img src="Galapagos.jpg" alt="Galapagos">
+    <img width=500px src="Galapagos.jpg" alt="Galapagos">
+    <br>
+    <input type="date" name="" id="">
+    <input type="number" name="" id="" placeholder="Tu telefono aquii">
+    
+    <div class="validacion-container">
+        <h2>Validación de Cédula Ecuatoriana</h2>
+        <input type="text" id="cedula" maxlength="10" placeholder="Ingresa tu cédula">
+        <button onclick="validarCedula()">Validar Cédula</button>
+        <div id="resultado"></div>
+    </div>
 
+    <script>
+        function validarCedula() {
+            const cedula = document.getElementById('cedula').value;
+            let resultado = document.getElementById('resultado');
+            
+            // Verificar longitud
+            if (cedula.length !== 10) {
+                resultado.innerHTML = '<p class="error">La cédula debe tener 10 dígitos</p>';
+                return false;
+            }
+
+            // Verificar que todos sean números
+            if (!/^\d+$/.test(cedula)) {
+                resultado.innerHTML = '<p class="error">La cédula solo debe contener números</p>';
+                return false;
+            }
+
+            // Verificar provincia (dos primeros dígitos)
+            const provincia = parseInt(cedula.substring(0, 2));
+            if (provincia < 1 || provincia > 24) {
+                resultado.innerHTML = '<p class="error">El código de provincia no es válido</p>';
+                return false;
+            }
+
+            // Verificar tercer dígito
+            const tercerDigito = parseInt(cedula.charAt(2));
+            if (tercerDigito >= 6) {
+                resultado.innerHTML = '<p class="error">El tercer dígito debe ser menor a 6</p>';
+                return false;
+            }
+
+            // Algoritmo de validación
+            const coeficientes = [2, 1, 2, 1, 2, 1, 2, 1, 2];
+            let suma = 0;
+
+            // Calcular suma según algoritmo
+            for (let i = 0; i < 9; i++) {
+                let valor = parseInt(cedula.charAt(i)) * coeficientes[i];
+                if (valor > 9) {
+                    valor -= 9;
+                }
+                suma += valor;
+            }
+
+            // Calcular dígito verificador
+            const digitoVerificador = parseInt(cedula.charAt(9));
+            const total = suma % 10;
+            const digitoCalculado = total === 0 ? 0 : 10 - total;
+
+            // Verificar resultado
+            if (digitoCalculado === digitoVerificador) {
+                resultado.innerHTML = '<p class="exitoo">¡Cédula ecuatoriana válida!</p>';
+                return true;
+            } else {
+                resultado.innerHTML = '<p class="error">Cédula no válida</p>';
+                return false;
+            }
+        }
+    </script>
 </body>
-
 </html>
